@@ -1,54 +1,53 @@
- function primeChecker(n) {
-     for (var x = 2; x < n; x++) {
-         if (n === 0 || n === 1) {
-             return false
-         }
-         if (n % x == 0) {
-             return false;
-         }
-     }
-     return true
- }
-
-
- function indexPrime(x) {
-
-     var hasil = [];
-     for (var j = 0; j < x; j++) {
-         console.log("ini x " + x);
-         console.log("ini j " + j);
-
-         for (var i = 2; i > j; i++) {
-             console.log("ini i " + i)
-             console.log("ini j " + j)
-           
-             if (primeChecker(i)) {
-                 hasil.push(i);
-             
-                 console.log("yang di push " + i);
-             
-                 break;
-             } else {
-                 console.log('sesuatu')
+function primeChecker(n) {
+     if (n < 2) {
+         return false;
+     } else if (n == 2) {
+         return true
+     } else {
+         for (i = 2; i < n; i++) {
+            console.log(`ini ${n}` + `ini ${i}`);
+             if (n % i == 0) {
+                return false;
              }
          }
+         return true
+
      }
-
-     return hasil;
-
  }
- console.log(indexPrime(2));
- //  function index(param1){
- //      hasil = [];
- //     var start = 2;
- //      while(start < param1){
- //         if(primeChecker(start) == true){
- //             hasil.push(start)
- //             start++
- //         }else{
+ console.log(primeChecker(7));
+// function indexPrime(param1){
+//    var index = 0;
+//    var n = 2;
+//     while(index < param1){
+//         if(primeChecker(n) === true){
+//             index++;
+//         }
+//         n++
+//     }
+//     return n - 1;
+// }
+//  console.log(indexPrime(2));
+ 
+//  function indexPrime(x) {
+//      var mulai = 0;
+//      var simpan = 0;
+//      while (mulai !== x) {
+//          if (primeChecker(simpan)) {
+//              mulai++
+//          }
+//          simpan++
+//      }
 
- //         }
- //      }
- //      return hasil
- // }
- // console.log(index(5));
+//      return simpan - 1
+//  }
+
+//  function indexPrime2(n){
+//     var bilanganPrima = 0;
+//      for(i = 0; i !== x ;i++){
+//          if(n )
+//      }
+//  }
+
+
+
+//  console.log(indexPrime(3));

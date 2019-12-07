@@ -1,9 +1,9 @@
-function stringManipulation(kata){
+function stringManipulation(word){
     validasi = /\b[aiueoAIUEO]/
-    if(validasi.test(kata[0]) == true ){
-        console.log(kata);
+    if(validasi.test(word[0]) == true ){
+        console.log(word);
     }else{
-        console.log(kata.substring(1)+kata[0]+"nyo");
+        console.log(word.substring(1)+word[0]+"nyo");
     }
 }
 
