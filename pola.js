@@ -1,19 +1,15 @@
-function pola(str) {
-    let hasil = str.split(' ');
-    let angkaAsli = [];
-    let kemungkinan = [];
-    let kemungkinan2 = [];
+const pola = str => {
+    let splittedString = str.split(' ');
+    let result = [];
     for (let i = 0; i <= 9; i++) {
-        kemungkinan.push(hasil[0].replace('#', i) * hasil[2]);
         for (let j = 0; j <= 9; j++) {
-            kemungkinan2.push(hasil[4].replace('#', j));
-            if (kemungkinan[i] === parseInt(kemungkinan21[j])) {
-                angkaAsli.push(i);
-                angkaAsli.push(j);
+            if (splittedString[0].replace('#', i) * splittedString[2] === parseInt(splittedString[4].replace('#', j))) {
+                result.push(i);
+                result.push(j);
             }
         }
     }
-    return angkaAsli
+    return result;
 }
 
 
