@@ -5,8 +5,9 @@
 - Challenge 2  - Deret Kaskus
 - Challenge 3  - Roman Numeral
 - Challenge 4  - Index Prime
-- Challenge 6  - String Manipulation
-- Challenge 7  - Sentence Manipulation
+- Challenge 5  - String Manipulation
+- Challenge 6  - Sentence Manipulation
+- Challenge 7  - Weird Multiply
 - Challenge 8  - Pola
 - Challenge 9  - Spiral
 ---
