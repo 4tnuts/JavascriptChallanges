@@ -1,20 +1,20 @@
-function weirdMultiply(sentence) {
+const weirdMultiply = sentence => {
 
-    let hasil = "" + sentence;
-    let result = hasil.match(/.{1}/g);
-    let banget = 1;
+    let string = "" + sentence;
+    let number = string.match(/.{1}/g);
+    let result = 1;
     let i = 0;
     
-    while (i < result.length) {
-        banget *= parseInt(result[i]);
+    while (i < number.length) {
+        result *= parseInt(number[i]);
         i++;
     }
 
-    if (banget <= 9) {
-        return banget;
+    if (result <= 9) {
+        return result;
     } else {
-         while (banget > 9) {
-            return weirdMultiply(banget);
+         while (result > 9) {
+            return weirdMultiply(result);
         }
     }
 
