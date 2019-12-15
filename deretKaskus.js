@@ -1,19 +1,18 @@
-function deretKaskus(n){
-    var angkaAwal= 0;
-    var hasil=[];
+const  deretKaskus = (n) => {
+    let number = 0;
+    let result = [];
     for(i=0; i < n;i++){
-        angkaAwal+=3;
-        if(angkaAwal % 6 === 0 && angkaAwal % 5 === 0 ){
-            hasil.push("KASKUS");
-        }else if(angkaAwal % 6 === 0){
-            hasil.push("KUS");
-        }else if(angkaAwal % 5 === 0){
-            hasil.push("KAS");
+        number+=3;
+        if(number % 6 === 0 && number % 5 === 0 ){
+            result.push("KASKUS");
+        }else if(number % 6 === 0){
+            result.push("KUS");
+        }else if(number % 5 === 0){
+            result.push("KAS");
         }else{
-            hasil.push(angkaAwal);
+            result.push(number);
         }
     }
-    return hasil;
+    return result;
 }
-
 console.log(deretKaskus(10));
