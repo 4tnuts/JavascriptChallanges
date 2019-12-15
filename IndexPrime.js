@@ -1,19 +1,21 @@
-function indexPrime(param1) {
-    var index = 0;
-    var calonPrima = 2;
+const indexPrime = param1 => {
+    let index = 0;
+    let prime = 2;
     while (index < param1) {
         let isPrime = true
-        for (var i = 2; i < calonPrima; i++) {
-            if (calonPrima % i === 0) {
+        for (let i = 2; i < prime; i++) {
+            if (prime % i === 0) {
                 isPrime = false;
             }
         }
         if (isPrime) {
             index++
         }
-        calonPrima++
+        prime++
     }
-    return calonPrima - 1
+    return prime - 1
 }
 
-console.log(indexPrime(9));
+console.log(indexPrime(4));
+console.log(indexPrime(500));
+console.log(indexPrime(37786));
