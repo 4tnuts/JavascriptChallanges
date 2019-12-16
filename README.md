@@ -10,4 +10,3 @@
 - Challenge 7  - Weird Multiply
 - Challenge 8  - Pola
 - Challenge 9  - Spiral
----
