@@ -18,7 +18,7 @@ if (inputArguments[1] === undefined && inputArguments !== 'data.json') {
 } else {
 
     fs.readFile(inputArguments[1], (err, data) => {
-        if (err) throw err;
+        if (err) return console.error(err);
         const jsonData = JSON.parse(data);
         console.log(`Selamat datang di permaijsonDatanan tebak - tebakan. kamu akan di berikan file ${inputArguments[1]}.\n
 untuk bermain , jawablah dengan jawaban yang sesuai.\nGunakanlah 'skip' untuk menangguhkan pertanyaannya, dan di
@@ -59,6 +59,14 @@ akhir pertanyaan akan di tanyakan lagi`);
             rl.prompt()
         }).on('close', () => {
             process.exit(0);
-        });
+        }).on('SIGINT', () => {
+            rl.question('Are you sure you want to exit: ', (answer) => {
+              if (answer.match(/^y(es)?$/i)){
+                rl.close();
+              } else{
+                rl.resume(); 
+              }
+            });
+          });
     });
 }
