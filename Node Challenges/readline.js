@@ -34,8 +34,4 @@ rl.on('line', (line) => {
 }).on('close', () => {
   console.log("Hore anda menang");
   process.exit(0);
-}).on('SIGINT', () => {
-  rl.question('Are you sure you want to exit: ', (answer) => {
-    if (answer.match(/^y(es)?$/i)) rl.pause();
-  });
-});
+})
