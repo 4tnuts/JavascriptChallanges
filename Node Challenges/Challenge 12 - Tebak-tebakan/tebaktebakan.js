@@ -11,6 +11,7 @@ const rl = readline.createInterface({
     prompt: 'Jawaban: '
 });
 
+
 if (inputArguments[1] === undefined && inputArguments !== 'data.json') {
     console.log(`Toloong sertakan nama file yang akan digunakan sebagai soal.`);
     console.log(`Misal 'node solution.js data.json'`);
@@ -28,6 +29,7 @@ akhir pertanyaan akan di tanyakan lagi`);
         rl.prompt();
 
         rl.on('line', line => {
+            
             if (line === 'skip') {
                 jsonData.push(jsonData[skipped]);
                 jsonData.splice(skipped, 1);
