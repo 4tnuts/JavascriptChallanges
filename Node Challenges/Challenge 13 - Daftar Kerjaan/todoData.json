@@ -1,0 +1,33 @@
+[
+   {
+      "task": "ingat dokumentasi pembelajaran",
+      "complete": false,
+      "tags": [
+         "kita",
+         "bersama"
+      ]
+   },
+   {
+      "task": "makan bareng",
+      "complete": false,
+      "tags": [
+         "tugas"
+      ]
+   },
+   {
+      "task": "mandi",
+      "complete": true,
+      "tags": [
+         "challenge"
+      ]
+   },
+   {
+      "task": "halo",
+      "complete": true,
+      "tags": [
+         "iya",
+         "selamat",
+         "malam"
+      ]
+   }
+]
