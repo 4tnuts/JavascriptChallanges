@@ -9,7 +9,6 @@ const weirdMultiply = sentence => {
         result *= parseInt(number[i]);
         i++;
     }
-
     if (result <= 9) {
         return result;
     } else {

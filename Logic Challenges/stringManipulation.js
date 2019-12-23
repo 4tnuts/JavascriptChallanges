@@ -1,9 +1,9 @@
-const testRegex = kata =>{
-    let validation = /\b[aiueoAIUEO]/
-    if(validation.test(kata[0]) == true ){
+const testRegex = kata => {
+    let kataRegex = /\b[aiueoAIUEO]/
+    if(kataRegex.test(kata[0]) == true){
         console.log(kata);
     }else{
-        console.log(kata.substring(1)+kata[0]+"nyo");
+        console.log(kata.substring(1) + kata[0] + "nyo");
     }
 }
 

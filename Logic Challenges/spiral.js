@@ -16,27 +16,27 @@ const spiral = param1 => {
     }
 
     while (atas <= bawah && kiri <= kanan) {
-        for (let j = atas; j <= kanan ;j++) {
+        for (let j = atas; j <= kanan; j++) {
             result.push(matrix[atas][j])
         }
-        atas++ 
+        atas++
 
         for (let k = atas; k <= bawah; k++) {
             result.push(matrix[k][kanan]);
         }
-        kanan-- 
+        kanan--
 
         for (let l = kanan; l >= kiri; l--) {
             result.push(matrix[bawah][l]);
         }
         bawah--
-        
+
         for (let m = bawah; m >= atas; m--) {
             result.push(matrix[m][kiri]);
         }
-        kiri++ 
+        kiri++
     }
-    
+
     return result;
 }
 
