@@ -7,3 +7,5 @@
 - Challenge 13 - Daftar Kerjaan
 - Challenge 14 - Database
 - Challenge 15 - Query
+- Challenge 16 - Simple OOP
+- Challenge 17 - Mesin-Hitung
