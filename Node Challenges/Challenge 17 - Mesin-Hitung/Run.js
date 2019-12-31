@@ -11,4 +11,4 @@ mh.x = 7; // set jari-jari 7
 mh.square().multiply(Pi).result(); // luas lingkaran dengan jari-jari 7 => Pi x r pangkat 2 = 154
 mh.x = 4; 
 mh.exponent(3).result(); // 4 pangkat 3 = 64
-mh.squareRoot().result(); // akar pangkat 2 dari 64 = 8
+mh.squareRoot().result();
