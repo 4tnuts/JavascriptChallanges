@@ -1,4 +1,3 @@
-
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('./university.db', err => {
     if (err) {
@@ -91,11 +90,22 @@ const crudMenus = (object) => {
                 list(object);
                 break;
             case '5':
-                list(object);
+                menu();
                 break;
             default:
                 console.log('gak ada');
         }
+    });
+}
+const check = (query, object) => {
+    db.run(query, err => {
+        console.log(query);
+        if (err) {
+             console.log('Something has an error');
+             crudMenus(object);
+        }
+        console.log('Success');
+        crudMenus(object);
     });
 }
 const create = (object) => {
@@ -103,56 +113,67 @@ const create = (object) => {
     switch (object) {
         case 'Mahasiswa':
             console.log('====================================================');
-            rl.question('Coba masukan data: ', nim => {
-                console.log(typeof nim + ' ' +  nim);
-                rl.question('Coba masukan data: ', nama => {
-                    console.log(typeof nim + ' ' +  nama);
-                    rl.question('Coba masukan data: ', jurusan => {
-                        console.log(typeof nim + ' ' +  jurusan);
-                        rl.question('Coba masukan data: ', alamat => {
-                            console.log(typeof nim + ' ' +  alamat);
-                          query = `INSERT INTO mahasiswa(nim, nama, jurusan, alamat) VALUES('${nim}','${nama}','${jurusan}','${alamat}')`;
-                          db.run(query, err => {
-                            if (err) {
-                                return console.log('something wrong');
-                            }
-                            console.log('data success');
-                            db.close(err => {
-                                if (err) {
-                                    return console.log('something just happened');
-                                }
-                            });
+            console.log('Tolong lengkapi data di bawah ini');
+            rl.question('NIM: ', nim => {
+                rl.question('Nama: ', nama => {
+                    rl.question('Jurusan: ', jurusan => {
+                        rl.question('Alamat: ', alamat => {
+                            query = `INSERT INTO mahasiswa(nim, nama, jurusan, alamat) VALUES('${nim}','${nama}','${jurusan}','${alamat}')`;
+                            check(query, object);
                         });
-                        })
-                    })
-                })
+                    });
+                });
             });
-            crudMenus('Mahasiswa');
             break;
         case 'Jurusan':
             console.log('====================================================');
-            console.log('Jurusan');
-            crudMenus('Jurusan');
+            console.log('Tolong lengkapi data di bawah ini');
+            rl.question('Id: ', id => {
+                rl.question('Nama: ', nama => {
+                    query = `INSERT INTO jurusan(id, nama) VALUES('${id}','${nama}')`;
+                    check(query, object);
+                });
+            });
             break;
         case 'Dosen':
             console.log('====================================================');
-            console.log('Dosen');
-            crudMenus('Dosen');
+            console.log('Tolong lengkapi data di bawah ini');
+            rl.question('NIP: ', nip => {
+                rl.question('Nama: ', nama => {
+                    query = `INSERT INTO dosen(nip, nama) VALUES('${nip}','${nama}')`;
+                    check(query, object);
+                });
+            });
             break;
-        case 'Matakuliah':
+        case 'Mata Kuliah':
             console.log('====================================================');
-            console.log('Mata Kuliah');
-            crudMenus('Mata Kuliah');
+            rl.question('Id: ', id => {
+                rl.question('Nama: ', nama => {
+                    rl.question('SKS: ', sks => {
+                        query = `INSERT INTO matakuliah(id, nama, sks) VALUES('${id}','${nama}',${parseInt(sks)})`;
+                        check(query, object);
+                    });
+                });
+            });
             break;
         case 'Kontrak':
             console.log('====================================================');
-            console.log('Kontrak');
-            crudMenus('Kontrak');
+            console.log('Tolong lengkapi data di bawah ini');
+            rl.question('Nilai: ', nilai => {
+                rl.question('Nim: ', nim => {
+                    rl.question('Nip: ', nip => {
+                        rl.question('Id matkul: ', idmatkul => {
+                            query = `INSERT INTO kontrak(nilai, nim, nip, idmatkul) VALUES('${nilai}','${nim}','${nip}','${idmatkul}')`;
+                            check(query, object);
+                        });
+                    });
+                });
+            });
             break;
         default:
             console.log('gak ada');
-        }
-    };
+    }
+};
 
 const menu = () => {
     console.log('====================================================');
@@ -185,14 +206,13 @@ const menu = () => {
                 break;
             case '6':
                 console.log('Kamu telah keluar');
-                login();
+                    console.log('Database closed')
+                    process.exit(0);
                 break;
             default:
                 console.log('gak ada');
         }
     });
 }
-
-
 
 login();
