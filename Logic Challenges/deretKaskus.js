@@ -1,7 +1,7 @@
 console.time('Test Speed Deret Kaskus Challenge');
+const  deretKaskus = (n) => {   
 let number = 0;
 let result = [];
-const  deretKaskus = (n) => {   
     for (let i = 0; i < n; i++) {
         number += 3;
         if (number % 6 === 0 && number % 5 === 0) {
