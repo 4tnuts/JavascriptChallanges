@@ -1,4 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
+const Table = require('cli-table');
 let db = new sqlite3.Database('./university.db', err => {
     if (err) {
         return console.log('Database error');
@@ -97,19 +98,49 @@ const crudMenus = (object) => {
         }
     });
 }
+const read = (query, object,cb) => {
+    await db.each(query, (err, row) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        switch (object) {
+            case 'Mahasiswa':
+                console.log(row.nim);
+                break;
+            case 'Jurusan':
+                console.log(row.id);
+                break;
+            case 'Dosen':
+                console.log(row.nip);
+                break;
+            case 'Mata Kuliah':
+                console.log(row.id);
+                break;
+            case 'Kontrak':
+                console.log(row.id);
+                break;
+            default:
+                console.log('Wrong command');
+        }
+    });
+    cb();
+}
+
 const check = (query, object) => {
     db.run(query, err => {
-        console.log(query);
         if (err) {
-             console.log('Something has an error');
-             crudMenus(object);
+            console.log('Something has an error');
+            crudMenus(object);
         }
         console.log('Success');
         crudMenus(object);
     });
 }
+
+
 const create = (object) => {
-    let query;
+    let createQuery;
+    let readQuery;
     switch (object) {
         case 'Mahasiswa':
             console.log('====================================================');
@@ -118,8 +149,11 @@ const create = (object) => {
                 rl.question('Nama: ', nama => {
                     rl.question('Jurusan: ', jurusan => {
                         rl.question('Alamat: ', alamat => {
-                            query = `INSERT INTO mahasiswa(nim, nama, jurusan, alamat) VALUES('${nim}','${nama}','${jurusan}','${alamat}')`;
-                            check(query, object);
+                            createQuery = `INSERT INTO mahasiswa(nim, nama, jurusan, alamat) VALUES('${nim}','${nama}','${jurusan}','${alamat}')`;
+                            readQuery = `SELECT * FROM mahasiswa`;
+                            read(readQuery, object, ()=>{
+                                check(createQuery, object);
+                            });
                         });
                     });
                 });
@@ -131,7 +165,9 @@ const create = (object) => {
             rl.question('Id: ', id => {
                 rl.question('Nama: ', nama => {
                     query = `INSERT INTO jurusan(id, nama) VALUES('${id}','${nama}')`;
-                    check(query, object);
+                    readQuery = `SELECT * FROM jurusan`;
+                    read(readQuery, object);
+                    check(createQuery, object);
                 });
             });
             break;
@@ -141,7 +177,9 @@ const create = (object) => {
             rl.question('NIP: ', nip => {
                 rl.question('Nama: ', nama => {
                     query = `INSERT INTO dosen(nip, nama) VALUES('${nip}','${nama}')`;
-                    check(query, object);
+                    readQuery = `SELECT * FROM dosen`;
+                    read(readQuery, object);
+                    check(createQuery, object);
                 });
             });
             break;
@@ -151,7 +189,9 @@ const create = (object) => {
                 rl.question('Nama: ', nama => {
                     rl.question('SKS: ', sks => {
                         query = `INSERT INTO matakuliah(id, nama, sks) VALUES('${id}','${nama}',${parseInt(sks)})`;
-                        check(query, object);
+                        readQuery = `SELECT * FROM matakuliah`;
+                        read(readQuery, object);
+                        check(createQuery, object);
                     });
                 });
             });
@@ -164,14 +204,16 @@ const create = (object) => {
                     rl.question('Nip: ', nip => {
                         rl.question('Id matkul: ', idmatkul => {
                             query = `INSERT INTO kontrak(nilai, nim, nip, idmatkul) VALUES('${nilai}','${nim}','${nip}','${idmatkul}')`;
-                            check(query, object);
+                            readQuery = `SELECT * FROM kontrak`;
+                            read(readQuery, object);
+                            check(createQuery, object);
                         });
                     });
                 });
             });
             break;
         default:
-            console.log('gak ada');
+            console.log('Wrong command');
     }
 };
 
@@ -206,11 +248,14 @@ const menu = () => {
                 break;
             case '6':
                 console.log('Kamu telah keluar');
-                    console.log('Database closed')
-                    process.exit(0);
-                break;
+                db.close(err => {
+                    if (err) {
+                        console.log(err.message);
+                    }
+                });
+                process.exit(0);
             default:
-                console.log('gak ada');
+                console.log('Wrong command');
         }
     });
 }
