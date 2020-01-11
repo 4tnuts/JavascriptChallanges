@@ -75,6 +75,7 @@ const menu = () => {
                 process.exit(0);
             default:
                 console.log('Wrong command');
+                menu();
         }
     });
 }
@@ -91,7 +92,7 @@ const crudMenus = (object) => {
     rl.question('Masukan salah satu no. dari opsi diatas ', number => {
         switch (number) {
             case '1':
-                read(object);
+                showTable(object);
                 break;
             case '2':
                 find(object);
@@ -100,7 +101,7 @@ const crudMenus = (object) => {
                 create(object);
                 break;
             case '4':
-                console.log('hapus')
+                remove(object);
                 break;
             case '5':
                 menu();
@@ -111,7 +112,55 @@ const crudMenus = (object) => {
     });
 }
 
-const read = (object) => {
+const remove = (object) => {
+    let deleteQuery;
+    switch (object) {
+        case 'Mahasiswa':
+            rl.question('Masukan NIM mahasiswa yang akan di hapus: ', nim => {
+                deleteQuery = `DELETE FROM mahasiswa WHERE nim = '${nim}'`;
+                check(deleteQuery, object, () => {
+                    showTable(object)
+                });
+            });
+            break;
+        case 'Jurusan':
+            rl.question('Masukan Id jurusan yang akan di hapus: ', id => {
+                deleteQuery = `DELETE FROM jurusan WHERE id = '${id}'`;
+                check(deleteQuery, object, () => {
+                    showTable(object)
+                });
+            });
+            break;
+        case 'Dosen':
+            rl.question('Masukan NIP dosen yang akan di hapus: ', nip => {
+                deleteQuery = `DELETE FROM dosen WHERE nip = '${nip}'`;
+                check(deleteQuery, object, () => {
+                    showTable(object)
+                });
+            });
+            break;
+        case 'Mata Kuliah':
+            rl.question('Masukan Id matakuliah yang akan di hapus: ', id => {
+                deleteQuery = `DELETE FROM matakuliah WHERE id = '${id}'`;
+                check(deleteQuery, object, () => {
+                    showTable(object)
+                });
+            });
+            break;
+        case 'Kontrak':
+            rl.question('Masukan Id Kontrak yang akan di hapus: ', id => {
+                deleteQuery = `DELETE FROM kontrak WHERE id = '${id}'`;
+                check(deleteQuery, object, () => {
+                    showTable(object)
+                });
+            });
+            break;
+        default:
+            console.log('command not found');
+    }
+}
+
+const showTable = (object) => {
     let readQuery;
     switch (object) {
         case 'Mahasiswa':
@@ -142,6 +191,7 @@ const read = (object) => {
         if (err) {
             return console.error(err.message);
         }
+
         rows.forEach(row => {
             switch (object) {
                 case 'Mahasiswa':
@@ -179,52 +229,77 @@ const read = (object) => {
     });
 }
 
-const show = (findQuery,number, object) =>{
+const showData = (findQuery, primaryKeys, object) => {
     db.serialize(() => {
-        db.get(findQuery, [number], (err, row) => {
+        db.get(findQuery, [primaryKeys], (err, row) => {
             if (err) {
                 return console.error(err.message);
             }
             if (row) {
-                switch (object){
+                switch (object) {
                     case 'Mahasiswa':
-                    console.log(`====================================================`);
-                    console.log(`Id          : ${row.nim}`);
-                    console.log(`Nama        : ${row.nama}`);
-                    console.log(`Alamat      : ${row.alamat}`);
-                    console.log(`Jurusan     : ${row.jurusan}`);
-                    crudMenus(object);
-                    break;
+                        console.log(`====================================================`);
+                        console.log(`Id          : ${row.nim}`);
+                        console.log(`Nama        : ${row.nama}`);
+                        console.log(`Alamat      : ${row.alamat}`);
+                        console.log(`Jurusan     : ${row.jurusan}`);
+                        crudMenus(object);
+                        break;
                     case 'Jurusan':
-                    console.log(`====================================================`);
-                    console.log(`Id          : ${row.id}`);
-                    console.log(`Nama        : ${row.nama}`);
-                    crudMenus(object);
-                    break;
+                        console.log(`====================================================`);
+                        console.log(`Id          : ${row.id}`);
+                        console.log(`Nama        : ${row.nama}`);
+                        crudMenus(object);
+                        break;
                     case 'Dosen':
-                    console.log(`====================================================`);
-                    console.log(`NIP         : ${row.nip}`);
-                    console.log(`Nama        : ${row.nama}`);
-                    crudMenus(object);
-                    break;
+                        console.log(`====================================================`);
+                        console.log(`NIP         : ${row.nip}`);
+                        console.log(`Nama        : ${row.nama}`);
+                        crudMenus(object);
+                        break;
                     case 'Mata Kuliah':
-                    console.log(`====================================================`);
-                    console.log(`Id          : ${row.id}`);
-                    console.log(`Nama        : ${row.nama}`);
-                    console.log(`SKS         : ${row.sks}`);
-                    crudMenus(object);
-                    break;
+                        console.log(`====================================================`);
+                        console.log(`Id          : ${row.id}`);
+                        console.log(`Nama        : ${row.nama}`);
+                        console.log(`SKS         : ${row.sks}`);
+                        crudMenus(object);
+                        break;
                     case 'Kontrak':
-                    console.log(`====================================================`);
-                    console.log(`Id          : ${row.id}`);
-                    console.log(`Nilai       : ${row.nilai}`);
-                    console.log(`NIM         : ${row.nim}`);
-                    console.log(`NIP         : ${row.nip}`);
-                    console.log(`Id Matkul   : ${row.idmatkul}`);
-                    crudMenus(object);
-                    break;
-                    default :
-                    console.log('command not found');
+                        console.log(`====================================================`);
+                        console.log(`Id          : ${row.id}`);
+                        console.log(`Nilai       : ${row.nilai}`);
+                        console.log(`NIM         : ${row.nim}`);
+                        console.log(`NIP         : ${row.nip}`);
+                        console.log(`Id Matkul   : ${row.idmatkul}`);
+                        crudMenus(object);
+                        break;
+                    default:
+                        console.log('command not found');
+                }
+            } else {
+                switch (object) {
+                    case 'Mahasiswa':
+                        console.log(`Mahasiswa dengan NIM ${number} tidak terdaftar`);
+                        crudMenus(object);
+                        break;
+                    case 'Jurusan':
+                        console.log(`Jurusan dengan Id ${number} tidak terdaftar`);
+                        crudMenus(object);
+                        break;
+                    case 'Dosen':
+                        console.log(`Dosen dengan NIP ${number} tidak terdaftar`);
+                        crudMenus(object);
+                        break;
+                    case 'Mata Kuliah':
+                        console.log(`Matakuliah dengan Id ${number} tidak terdaftar`);
+                        crudMenus(object);
+                        break;
+                    case 'Kontrak':
+                        console.log(`Kontrak dengan Id ${number} tidak terdaftar`);
+                        crudMenus(object);
+                        break;
+                    default:
+                        console.log('wrong command');
                 }
             }
         });
@@ -232,62 +307,58 @@ const show = (findQuery,number, object) =>{
 }
 
 const find = (object) => {
-    let findQuery;
-    let number;
     switch (object) {
         case 'Mahasiswa':
+            console.log(`====================================================`);
             rl.question('Masukan NIM Mahasiswa: ', nim => {
-                findQuery = 'SELECT * FROM mahasiswa WHERE nim = ?';
-                number = nim;
-                show(findQuery, number, object);
+                let findQuery = 'SELECT * FROM mahasiswa WHERE nim = ?';
+                showData(findQuery, nim, object);
             });
             break;
         case 'Jurusan':
+            console.log(`====================================================`);
             rl.question('Masukan Id Jurusan : ', id => {
-                findQuery = 'SELECT * FROM jurusan WHERE id = ?' ;
-                number = id;
-                show(findQuery, number, object);
+                let findQuery = 'SELECT * FROM jurusan WHERE id = ?';
+                showData(findQuery, id, object);
             });
             break;
         case 'Dosen':
+            console.log(`============================================f========`);
             rl.question('Masukan NIP Dosen: ', nip => {
-                findQuery = 'SELECT * FROM dosen WHERE nip = ?';
-                number = nip;
-                show(findQuery, number, object);
+                let findQuery = 'SELECT * FROM dosen WHERE nip = ?';
+                showData(findQuery, nip, object);
             });
             break;
         case 'Mata Kuliah':
+            console.log(`====================================================`);
             rl.question('Masukan Id Mata Kuliah: ', id => {
-                findQuery = 'SELECT * FROM matakuliah WHERE id = ?';
-                number = id;
-                show(findQuery, number, object);
+                findQuery = 'SELECT * FROM matakuliah WHERE id = ?'
+                showData(findQuery, id, object);
             });
             break;
         case 'Kontrak':
+            console.log(`====================================================`);
             rl.question('Masukan Id Kontrak: ', id => {
                 findQuery = 'SELECT * FROM kontrak WHERE id = ?';
-                number = id;
-                show(findQuery, number, object);
+                showData(findQuery, id, object);
             });
             break;
         default:
             console.log('Wrong command');
     }
-   
 }
-const check = (query, object, read) => {
+
+const check = (query, object, showTable) => {
     db.serialize(() => {
         db.run(query, err => {
             if (err) {
                 console.log('Something has an error');
                 crudMenus(object);
             }
-            console.log('Success');
         });
-        read();
+        showTable();
     });
 }
-
 
 const create = (object) => {
     let createQuery;
@@ -301,7 +372,7 @@ const create = (object) => {
                         rl.question('Alamat: ', alamat => {
                             createQuery = `INSERT INTO mahasiswa(nim, nama, jurusan, alamat) VALUES('${nim}','${nama}','${jurusan}','${alamat}')`;
                             check(createQuery, object, () => {
-                                read(object)
+                                showTable(object)
                             });
                         });
                     });
@@ -313,10 +384,9 @@ const create = (object) => {
             console.log('Tolong lengkapi data di bawah ini');
             rl.question('Id: ', id => {
                 rl.question('Nama: ', nama => {
-                    query = `INSERT INTO jurusan(id, nama) VALUES('${id}','${nama}')`;
-                    readQuery = `SELECT * FROM jurusan`;
+                    createQuery = `INSERT INTO jurusan(id, nama) VALUES('${id}','${nama}')`;
                     check(createQuery, object, () => {
-                        read(readQuery)
+                        showTable(object);
                     });
                 });
             });
@@ -326,10 +396,9 @@ const create = (object) => {
             console.log('Tolong lengkapi data di bawah ini');
             rl.question('NIP: ', nip => {
                 rl.question('Nama: ', nama => {
-                    query = `INSERT INTO dosen(nip, nama) VALUES('${nip}','${nama}')`;
-                    readQuery = `SELECT * FROM dosen`;
+                    createQuery = `INSERT INTO dosen(nip, nama) VALUES('${nip}','${nama}')`;
                     check(createQuery, object, () => {
-                        read(readQuery)
+                        showTable(object);
                     });
                 });
             });
@@ -339,10 +408,9 @@ const create = (object) => {
             rl.question('Id: ', id => {
                 rl.question('Nama: ', nama => {
                     rl.question('SKS: ', sks => {
-                        query = `INSERT INTO matakuliah(id, nama, sks) VALUES('${id}','${nama}',${parseInt(sks)})`;
-                        readQuery = `SELECT * FROM matakuliah`;
+                        createQuery = `INSERT INTO matakuliah(id, nama, sks) VALUES('${id}','${nama}',${parseInt(sks)})`;
                         check(createQuery, object, () => {
-                            read(readQuery)
+                            showTable(object);
                         });
                     });
                 });
@@ -355,10 +423,9 @@ const create = (object) => {
                 rl.question('Nim: ', nim => {
                     rl.question('Nip: ', nip => {
                         rl.question('Id matkul: ', idmatkul => {
-                            query = `INSERT INTO kontrak(nilai, nim, nip, idmatkul) VALUES('${nilai}','${nim}','${nip}','${idmatkul}')`;
-                            readQuery = `SELECT * FROM kontrak`;
+                            createQuery = `INSERT INTO kontrak(nilai, nim, nip, idmatkul) VALUES('${nilai}','${nim}','${nip}','${idmatkul}')`;
                             check(createQuery, object, () => {
-                                read(readQuery)
+                                showTable(object)
                             });
                         });
                     });
