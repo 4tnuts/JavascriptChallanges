@@ -107,7 +107,8 @@ const crudMenus = (object) => {
                 menu();
                 break;
             default:
-                console.log('gak ada');
+                console.log('Wrong Command');
+                crudMenus(object);
         }
     });
 }
@@ -196,7 +197,7 @@ const showTable = (object) => {
             switch (object) {
                 case 'Mahasiswa':
                     table.options['head'] = ['NIM', 'Nama', 'Jurusan', 'Alamat'];
-                    table.options['colWidths'] = [10, 20, 10, 20];
+                    table.options['colWidths'] = [15, 20, 10, 20];
                     table.push([`${row.nim}`, `${row.nama}`, `${row.jurusan}`, `${row.alamat}`]);
 
                     break;
@@ -213,7 +214,7 @@ const showTable = (object) => {
                 case 'Mata Kuliah':
                     table.options['head'] = ['Id', 'Nama', 'SKS'];
                     table.options['colWidths'] = [10, 20, 10];
-                    table.push([`${row.nip}`, `${row.nama}`, `${row.sks}`]);
+                    table.push([`${row.id}`, `${row.nama}`, `${row.sks}`]);
                     break;
                 case 'Kontrak':
                     table.options['head'] = ['Id', 'Nilai', 'NIM', 'NIP', 'Id Matakuliah'];
@@ -239,6 +240,8 @@ const showData = (findQuery, primaryKeys, object) => {
                 switch (object) {
                     case 'Mahasiswa':
                         console.log(`====================================================`);
+                        console.log('Student Details');
+                        console.log(`====================================================`);
                         console.log(`Id          : ${row.nim}`);
                         console.log(`Nama        : ${row.nama}`);
                         console.log(`Alamat      : ${row.alamat}`);
@@ -247,11 +250,15 @@ const showData = (findQuery, primaryKeys, object) => {
                         break;
                     case 'Jurusan':
                         console.log(`====================================================`);
+                        console.log('Jurusan Details');
+                        console.log(`====================================================`);
                         console.log(`Id          : ${row.id}`);
                         console.log(`Nama        : ${row.nama}`);
                         crudMenus(object);
                         break;
                     case 'Dosen':
+                        console.log(`====================================================`);
+                        console.log('Dosen');
                         console.log(`====================================================`);
                         console.log(`NIP         : ${row.nip}`);
                         console.log(`Nama        : ${row.nama}`);
@@ -259,12 +266,16 @@ const showData = (findQuery, primaryKeys, object) => {
                         break;
                     case 'Mata Kuliah':
                         console.log(`====================================================`);
+                        console.log('Matakuliah Details');
+                        console.log(`====================================================`);
                         console.log(`Id          : ${row.id}`);
                         console.log(`Nama        : ${row.nama}`);
                         console.log(`SKS         : ${row.sks}`);
                         crudMenus(object);
                         break;
                     case 'Kontrak':
+                        console.log(`====================================================`);
+                        console.log('Kontrak Details');
                         console.log(`====================================================`);
                         console.log(`Id          : ${row.id}`);
                         console.log(`Nilai       : ${row.nilai}`);
@@ -279,23 +290,23 @@ const showData = (findQuery, primaryKeys, object) => {
             } else {
                 switch (object) {
                     case 'Mahasiswa':
-                        console.log(`Mahasiswa dengan NIM ${number} tidak terdaftar`);
+                        console.log(`Mahasiswa dengan NIM ${primaryKeys} tidak terdaftar`);
                         crudMenus(object);
                         break;
                     case 'Jurusan':
-                        console.log(`Jurusan dengan Id ${number} tidak terdaftar`);
+                        console.log(`Jurusan dengan Id ${primaryKeys} tidak terdaftar`);
                         crudMenus(object);
                         break;
                     case 'Dosen':
-                        console.log(`Dosen dengan NIP ${number} tidak terdaftar`);
+                        console.log(`Dosen dengan NIP ${primaryKeys} tidak terdaftar`);
                         crudMenus(object);
                         break;
                     case 'Mata Kuliah':
-                        console.log(`Matakuliah dengan Id ${number} tidak terdaftar`);
+                        console.log(`Matakuliah dengan Id ${primaryKeys} tidak terdaftar`);
                         crudMenus(object);
                         break;
                     case 'Kontrak':
-                        console.log(`Kontrak dengan Id ${number} tidak terdaftar`);
+                        console.log(`Kontrak dengan Id ${primaryKeys} tidak terdaftar`);
                         crudMenus(object);
                         break;
                     default:
@@ -352,8 +363,7 @@ const check = (query, object, showTable) => {
     db.serialize(() => {
         db.run(query, err => {
             if (err) {
-                console.log('Something has an error');
-                crudMenus(object);
+                console.log('Id sudah ada');
             }
         });
         showTable();
@@ -394,7 +404,7 @@ const create = (object) => {
         case 'Dosen':
             console.log('====================================================');
             console.log('Tolong lengkapi data di bawah ini');
-            rl.question('NIP: ', nip => {
+            rl.questiotidakn('NIP: ', nip => {
                 rl.question('Nama: ', nama => {
                     createQuery = `INSERT INTO dosen(nip, nama) VALUES('${nip}','${nama}')`;
                     check(createQuery, object, () => {
@@ -417,7 +427,7 @@ const create = (object) => {
             });
             break;
         case 'Kontrak':
-            console.log('====================================================');
+            console.log('=====tidak===============================================');
             console.log('Tolong lengkapi data di bawah ini');
             rl.question('Nilai: ', nilai => {
                 rl.question('Nim: ', nim => {
