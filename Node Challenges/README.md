@@ -9,3 +9,5 @@
 - Challenge 15 - Query
 - Challenge 16 - Simple OOP
 - Challenge 17 - Mesin-Hitung
+- Challenge 18 - University
+- Challenge 19 - JSON-BREAD
