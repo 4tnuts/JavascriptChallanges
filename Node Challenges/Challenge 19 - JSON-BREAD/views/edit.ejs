@@ -1,0 +1,64 @@
+<%- include('header'); -%>
+<div class="container">
+    <h1>BREAD-JSON</h1>
+    <label for="">
+        <h3>Edit Data</h3>
+    </label>
+
+    <form action="/edit/<%= id %>" method="post">
+        <label for="string">
+            <h4>ID</h4>
+        </label>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id='id' name='id' value='<%= id %>' disabled>
+        </div>
+
+        <label for="string">
+            <h4>String</h4>
+        </label>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id='string' placeholder="String" name='string'
+                value="<%= data.string %>">
+        </div>
+
+        <label for="integer">
+            <h4>Integer</h4>
+        </label>
+        <div class="input-group mb-3">
+            <input type="number" class="form-control" id='integer' placeholder="Integer" name="integer"
+                value="<%= data.integer %>">
+        </div>
+
+        <label for="float">
+            <h4>Float</h4>
+        </label>
+        <div class="input-group mb-3">
+            <input type="number" class="form-control" id='float' placeholder="Float" name='float'
+                value="<%= data.float %>">
+        </div>
+
+        <label for="date">
+            <h4>Date</h4>
+        </label>
+        <div class="input-group mb-3">
+            <input  class="form-control" type="date" id="date" name='date' value="<%= data.date %>">
+        </div>
+
+        <label for="boolean">
+            <h4>Boolean</h4>
+        </label>
+        <div class="input-group mb-3">
+            <select id="inputState" class="form-control" name="boolean">
+                <% if(data.boolean === 'true'){ %>
+                <option value='true'>true</option>
+                <option value='false'>false</option>
+                <% }else{ %>
+                <option value='false'>false</option>
+                <option value='true'>true</option>
+                <% } %>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-outline-primary">Edit</button>
+    </form>
+    <%- include('footer'); -%>

@@ -1,0 +1,137 @@
+<%- include('header'); -%>
+<div class="container">
+    <h1>BREAD-JSON</h1>
+    <label for="">
+        <h3>Filters</h3>
+    </label>
+
+    <form>
+
+        <label for="id">
+            <h4>ID</h4>
+        </label>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    <input type="checkbox">
+                </div>
+            </div>
+            <input type="text" class="form-control" id='id' placeholder="ID" name="id">
+        </div>
+
+        <label for="string">
+            <h4>String</h4>
+        </label>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    <input type="checkbox">
+                </div>
+            </div>
+            <input type="text" class="form-control" id='string' placeholder="String" name='string'>
+        </div>
+
+        <label for="integer">
+            <h4>Integer</h4>
+        </label>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    <input type="checkbox">
+                </div>
+            </div>
+            <input type="number" class="form-control" id='integer' placeholder="Integer" name="integer">
+        </div>
+
+        <label for="float">
+            <h4>Float</h4>
+        </label>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    <input type="checkbox">
+                </div>
+            </div>
+            <input type="number" class="form-control" id='float' placeholder="Float" name="float">
+        </div>
+
+        <label for="date">
+            <h4>Date</h4>
+        </label>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    <input type="checkbox">
+                </div>
+            </div>
+            <input placeholder="Start Date" class="form-control" type="text" onfocus="(this.type='date')"
+                onblur="(this.value == '' ? this.type='text' : this.type='date')" id="dateStart">
+            <input placeholder="End Date" class="form-control" type="text" onfocus="(this.type='date')"
+                onblur="(this.value == '' ? this.type='text' : this.type='date')" id="dateEnd">
+        </div>
+
+        <label for="boolean">
+            <h4>Boolean</h4>
+        </label>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    <input type="checkbox">
+                </div>
+            </div>
+            <select id="inputState" class="form-control" name="boolean">
+                <option selected disabled>Choose...</option>
+                <option>true</option>
+                <option>false</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-outline-primary">Search</button>
+    </form>
+    <br>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">String</th>
+                <th scope="col">Integer</th>
+                <th scope="col">Float</th>
+                <th scope="col">Date</th>
+                <th scope="col">Boolean</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% dataJSON.forEach((row, id) =>{ %>
+            <tr>
+                <th scope="row"><%= id + 1%></th>
+                <td><%= row.string%></td>
+                <td><%= row.integer%></td>
+                <td><%= row.float%></td>
+                <td><%= row.date%></td>
+                <td><%= row.boolean%></td>
+                <td> <a href='/edit/<%= id %>' class="btn btn-outline-success">Edit</a> <a href='/delete/<%= id %>'
+                        type="submit" class="btn btn-outline-danger">Hapus</a></td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+    <nav aria-label="...">
+        <ul class="pagination">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item" aria-current="page">
+                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <a href="/add" class="btn btn-outline-primary">Tambah</a>
+</div>
+<%- include('footer'); -%>

@@ -1,0 +1,16 @@
+{
+  "name": "challenge19-json-bread",
+  "version": "1.0.0",
+  "description": "Challenge 19 - JSON-BREAD",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "4tnuts",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1"
+  }
+}
