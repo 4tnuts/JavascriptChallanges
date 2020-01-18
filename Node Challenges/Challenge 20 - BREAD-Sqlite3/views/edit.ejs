@@ -4,13 +4,13 @@
     <label for="">
         <h3>Edit Data</h3>
     </label>
-
-    <form action="/edit/<%= id %>" method="post">
+<% console.log(row); %>
+    <form action="/edit/<%= row.id %>" method="post">
         <label for="string">
             <h4>ID</h4>
         </label>
         <div class="input-group mb-3">
-            <input type="text" class="form-control" id='id' name='id' value='<%= id %>' disabled>
+            <input type="text" class="form-control" id='id' name='id' value='<%= row.id %>' disabled>
         </div>
 
         <label for="string">
@@ -18,7 +18,7 @@
         </label>
         <div class="input-group mb-3">
             <input type="text" class="form-control" id='string' placeholder="String" name='string'
-                value="<%= data.string %>">
+                value="<%= row.teks %>">
         </div>
 
         <label for="integer">
@@ -26,22 +26,22 @@
         </label>
         <div class="input-group mb-3">
             <input type="number" class="form-control" id='integer' placeholder="Integer" name="integer"
-                value="<%= data.integer %>">
+                value="<%= row.nomor %>">
         </div>
 
         <label for="float">
             <h4>Float</h4>
         </label>
         <div class="input-group mb-3">
-            <input type="number" class="form-control" id='float' placeholder="Float" name='float'
-                value="<%= data.float %>">
+            <input type="number" class="form-control" step=any id='float' placeholder="Float" name='float'
+                value="<%= row.pecahan %>">
         </div>
 
         <label for="date">
             <h4>Date</h4>
         </label>
         <div class="input-group mb-3">
-            <input  class="form-control" type="date" id="date" name='date' value="<%= data.date %>">
+            <input  class="form-control" type="date" id="date" name='date' value="<%= row.tanggal %>">
         </div>
 
         <label for="boolean">
@@ -49,12 +49,18 @@
         </label>
         <div class="input-group mb-3">
             <select id="inputState" class="form-control" name="boolean">
-                <% if(data.boolean === 'true'){ %>
-                <option value='true'>true</option>
+                <% if(row.kondisi === 'true'){ %>
+                <option value=''>Choose</option>
+                <option value='true' selected>true</option>
                 <option value='false'>false</option>
+                <% }else if(row.kondisi === 'false'){ %>
+                    <option value=''>Choose</option>
+                    <option value='true'>true</option>
+                    <option value='false' selected>false</option>
                 <% }else{ %>
-                <option value='false'>false</option>
-                <option value='true'>true</option>
+                    <option value='' selected>Choose</option>
+                    <option value='true'>true</option>
+                    <option value='false'>false</option> 
                 <% } %>
             </select>
         </div>

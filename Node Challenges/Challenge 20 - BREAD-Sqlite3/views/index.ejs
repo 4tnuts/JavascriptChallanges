@@ -5,18 +5,17 @@
         <h3>Filters</h3>
     </label>
 
-    <form>
-
+    <form action='/' method='get'>
         <label for="id">
             <h4>ID</h4>
         </label>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    <input type="checkbox">
+                    <input type="checkbox" name='idCheck' value="checked" <%= query.idCheck ? 'checked' : ''%>>
                 </div>
             </div>
-            <input type="text" class="form-control" id='id' placeholder="ID" name="id">
+            <input type="text" class="form-control" id='id' placeholder="ID" name="id" value='<%= query.id %>'>
         </div>
 
         <label for="string">
@@ -25,10 +24,10 @@
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    <input type="checkbox">
+                    <input type="checkbox" name='stringCheck' value="checked" <%= query.stringCheck ? 'checked' : ''%>>
                 </div>
             </div>
-            <input type="text" class="form-control" id='string' placeholder="String" name='string'>
+            <input type="text" class="form-control" id='string' placeholder="String" name='string' value='<%= query.string %>'>
         </div>
 
         <label for="integer">
@@ -37,10 +36,10 @@
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    <input type="checkbox">
+                    <input type="checkbox" name='integerCheck' value="checked" <%= query.integerCheck ? 'checked' : ''%>>
                 </div>
             </div>
-            <input type="number" class="form-control" id='integer' placeholder="Integer" name="integer">
+            <input type="number" class="form-control" id='integer' placeholder="Integer" name="integer" value='<%= query.integer %>'>
         </div>
 
         <label for="float">
@@ -49,10 +48,10 @@
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    <input type="checkbox">
+                    <input type="checkbox" name='floatCheck' value="checked" <%= query.floatCheck ? 'checked' : ''%>>
                 </div>
             </div>
-            <input type="number" class="form-control" id='float' placeholder="Float" name="float">
+            <input type="number" class="form-control" step=any id='float' placeholder="Float" name="float" value='<%= query.float %>'>
         </div>
 
         <label for="date">
@@ -61,13 +60,13 @@
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    <input type="checkbox">
+                    <input type="checkbox" name='dateCheck' value="checked" <%= query.dateCheck ? 'checked' : ''%>>
                 </div>
             </div>
             <input placeholder="Start Date" class="form-control" type="text" onfocus="(this.type='date')"
-                onblur="(this.value == '' ? this.type='text' : this.type='date')" id="dateStart">
+                onblur="(this.value == '' ? this.type='text' : this.type='date')" name='dateStart' value='<%= query.dateStart %>'>
             <input placeholder="End Date" class="form-control" type="text" onfocus="(this.type='date')"
-                onblur="(this.value == '' ? this.type='text' : this.type='date')" id="dateEnd">
+                onblur="(this.value == '' ? this.type='text' : this.type='date')" name='dateEnd'  value='<%= query.dateEnd %>'>
         </div>
 
         <label for="boolean">
@@ -76,24 +75,25 @@
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    <input type="checkbox">
+                    <input type="checkbox" name='booleanCheck' value="checked" <%= query.booleanCheck ? 'checked' : ''%>>
                 </div>
             </div>
             <select id="inputState" class="form-control" name="boolean">
-                <option selected disabled>Choose...</option>
-                <option>true</option>
-                <option>false</option>
+                    <option value='' <%= query.boolean == '' ? 'selected' : ''; %>>Choose</option>
+                    <option value='true' <%= query.boolean == 'true' ? 'selected' : ''; %>>true</option>
+                    <option value='false'<%= query.boolean == 'false' ? 'selected' : ''; %>>false</option>
             </select>
         </div>
 
         <button type="submit" class="btn btn-outline-primary">Search</button>
+        <a href='/' class="btn btn-outline-warning">Reset</a>
     </form>
     <br>
 
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">ID</th>
+                <th scope="col">ID Data</th>
                 <th scope="col">String</th>
                 <th scope="col">Integer</th>
                 <th scope="col">Float</th>
@@ -103,28 +103,30 @@
             </tr>
         </thead>
         <tbody>
-            <% dataJSON.forEach((row, id) =>{ %>
-            <tr>
-                <th scope="row"><%= id + 1%></th>
-                <td><%= row.string%></td>
-                <td><%= row.integer%></td>
-                <td><%= row.float%></td>
-                <td><%= row.date%></td>
-                <td><%= row.boolean%></td>
-                <td> <a href='/edit/<%= id %>' class="btn btn-outline-success">Edit</a> <a href='/delete/<%= id %>'
-                        type="submit" class="btn btn-outline-danger">Hapus</a></td>
-            </tr>
-            <% }); %>
+            <% rows.forEach((row, id) =>{ %>
+                <tr>
+                    <th scope="row"><%= row.id %></th>
+                    <td><%= row.teks%></td>
+                    <td><%= row.nomor%></td>
+                    <td><%= row.pecahan%></td>
+                    <td><%= row.tanggal%></td>
+                    <td><%= row.kondisi%></td>
+                    <td> <a href='/edit/<%= row.id %>' class="btn btn-outline-success">Edit</a> <a href='/delete/<%= row.id %>'
+                            type="submit" class="btn btn-outline-danger">Hapus</a></td>
+                </tr>
+                <% }); %>
         </tbody>
     </table>
     <nav aria-label="...">
         <ul class="pagination">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            <li class="page-item <%= currentPage <= 1 ? 'disabled' : ''; %>">
+                <a class="page-link" href="/?page=<%= currentPage - 1%>" tabindex="-1" aria-disabled="true">Previous</a>
             </li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
+            <% for(let i = 1 ; i <= totalPages ; i++){%>
+            <li class="page-item <%= currentPage == i ? 'active': ''; %>"><a class="page-link" href="/?page=<%=  i + '&' + url%> "> <%= i %> </a></li>
+            <% } %>
+            <li class="page-item <%= currentPage >= totalPages ? 'disabled' : ''; %>">
+                <a class="page-link" href="/?page=<%= currentPage + 1%>">Next</a>
             </li>
         </ul>
     </nav>

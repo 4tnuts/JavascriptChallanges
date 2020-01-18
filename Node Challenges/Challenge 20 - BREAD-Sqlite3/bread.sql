@@ -4,6 +4,14 @@ CREATE TABLE bread(
     nomor INTEGER,
     tanggal DATE,
     pecahan REAL,
-    kondisi BOOLEAN
+    kondisi VARCHAR(5)
 );
 
+UPDATE bread SET teks = ,
+    nomor =,
+    tanggal = ,
+    pecahan =,
+    kondisi=
+    WHERE id = 
+
+INSERT INTO bread(teks,nomor,tanggal,pecahan,kondisi) VALUES ('','','','','');
