@@ -1,0 +1,222 @@
+<%- include('header'); -%>
+<div class="container">
+    <h1>BREAD-JSON</h1>
+    <div class='container'>
+        <form id='form-bread'>
+            <label for="id">
+                <h4>ID</h4>
+            </label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox">
+                    </div>
+                </div>
+                <input type="text" class="form-control" id='id' placeholder="ID" name="id">
+            </div>
+
+            <label for="string">
+                <h4>String</h4>
+            </label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox">
+                    </div>
+                </div>
+                <input type="text" class="form-control" id='string' placeholder="String" name='string'>
+            </div>
+
+            <label for="integer">
+                <h4>Integer</h4>
+            </label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox">
+                    </div>
+                </div>
+                <input type="number" class="form-control" id='integer' placeholder="Integer" name="integer">
+            </div>
+
+            <label for="float">
+                <h4>Float</h4>
+            </label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox">
+                    </div>
+                </div>
+                <input type="number" class="form-control" id='float' step=any placeholder="Float" name="float">
+            </div>
+
+            <label for="date">
+                <h4>Date</h4>
+            </label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox">
+                    </div>
+                </div>
+                <input class="form-control" type="date" id="dateStart" name='date'>
+                <input class="form-control" type="date" id="dateEnd">
+            </div>
+
+            <label for="boolean">
+                <h4>Boolean</h4>
+            </label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox">
+                    </div>
+                </div>
+                <select class="form-control kondisi" name="boolean" id='boolean'>
+                    <option value='' disabled>Choose...</option>
+                    <option value='true'>true</option>
+                    <option value='false'>false</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-outline-primary" id="search">Search</button>
+            <button type="submit" class="btn btn-outline-success" id="save" onclick="">Tambah</button>
+        </form>
+        <br>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID Data</th>
+                <th scope="col">String</th>
+                <th scope="col">Integer</th>
+                <th scope="col">Float</th>
+                <th scope="col">Date</th>
+                <th scope="col">Boolean</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+</div>
+</body>
+<script type="text/javascript">
+    $(document).ready(() => {
+        loadData();
+        $('#form-bread').submit((e) => {
+            e.preventDefault();
+            saveData();
+        });
+
+        $('table tbody').on('click', '.btn-delete', (event) => {
+            deleteData($(event.currentTarget).attr('data-id'));
+        })
+
+        $('table tbody').on('click', '.btn-edit', (event) => {
+            getData($(event.currentTarget).attr('data-id'));
+        })
+    })
+
+    const loadData = () => {
+        $.ajax({
+                method: "GET",
+                url: "http://localhost:3000/bread",
+                dataType: 'json'
+            })
+            .done(function (hasil) {
+                let html = '';
+                hasil.forEach(item => {
+                    html += `
+              <tr>
+              <td>${item.id}</td>
+              <td>${item.teks}</td>
+              <td>${item.nomor}</td>
+              <td>${item.pecahan}</td>
+              <td>${item.tanggal}</td>
+              <td>${item.kondisi}</td>
+              <td><button  type="button" class="btn btn-outline-danger btn-delete" data-id="${item.id}">delete</button>
+                  <button type="button" class="btn btn-outline-success btn-edit" data-id="${item.id}">edit</button></td>
+              </tr>
+              `
+                });
+                $('table tbody').html(html);
+            });
+    }
+
+    const saveData = () => {
+        let id = $('input#id').val();
+        console.log(id)
+        if (id) {
+            $.ajax({
+                method: 'PUT',
+                url: `http://localhost:3000/bread/edit/${id}`,
+                data: {
+                    teks: $('input#string').val(),
+                    nomor: $('input#integer').val(),
+                    pecahan: $('input#float').val(),
+                    tanggal: $('input#dateStart').val(),
+                    kondisi: $('input#kondisi').val()
+                },
+                dataType: 'json'
+            }).done(function (hasil) {
+                loadData();
+            })
+        } else {
+            $.ajax({
+                method: 'POST',
+                url: `http://localhost:3000/bread/add`,
+                data: {
+                    teks: $('input#string').val(),
+                    nomor: $('input#integer').val(),
+                    pecahan: $('input#float').val(),
+                    tanggal: $('input#dateStart').val(),
+                    kondisi: $('input#boolean').val()
+                },
+                dataType: 'json'
+            }).done(function (hasil) {
+                loadData();
+            })
+        }
+    }
+
+    const getData = (id) => {
+        $.ajax({
+                method: 'GET',
+                url: `http://localhost:3000/bread/edit/${id}`,
+                dataType: 'json'
+            })
+            .done(function (hasil) {
+                hasil.forEach(item => {
+                    $('input#id').val(item.id);
+                    $('input#string').val(item.teks);
+                    $('input#integer').val(item.nomor);
+                    $('input#float').val(item.pecahan);
+                    $('input#dateStart').val(item.tanggal);
+                    $(`#boolean option[value=${item.kondisi}]`).attr('selected', 'selected');
+                })
+                $('.input-group-prepend, input#dateEnd, #search').fadeOut();
+                $('button#save').html('save');
+            });
+    }
+    const deleteData = (id) => {
+        $.ajax({
+                method: 'DELETE',
+                url: `http://localhost:3000/bread/delete/${id}`,
+                dataType: 'json'
+            })
+            .done(function (hasil) {
+                loadData();
+                $('input#id').val('');
+                $('input#string').val('');
+                $('input#integer').val('');
+                $('input#float').val('');
+                $('input#dateStart').val('');
+                $(`#boolean option[value=${''}]`).attr('selected', 'selected');
+            });
+    }
+</script>
+<%- include('footer'); -%>
