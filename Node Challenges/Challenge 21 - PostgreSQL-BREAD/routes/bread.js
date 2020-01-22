@@ -34,7 +34,7 @@ module.exports = (pool) => {
     });
   });
 
-  router.get('/edit/:id', (req,res,next) => {
+  router.get('/:id', (req,res,next) => {
     let getData = `SELECT * FROM bread WHERE id = $1`;
     let id = [req.params.id];
     pool.query(getData, id, (err, data) => {
@@ -47,7 +47,7 @@ module.exports = (pool) => {
     });
   });
 
-  router.put('/edit/:id', (req, res, next) => {
+  router.put('/:id', (req, res, next) => {
     let update = 'UPDATE bread SET teks = $2, nomor = $3, pecahan = $4, tanggal = $5, kondisi = $6  WHERE id = $1';
     let body = [req.params.id, req.body.teks, req.body.nomor, req.body.pecahan, req.body.tanggal, req.body.kondisi];
     console.log(body);
@@ -64,7 +64,7 @@ module.exports = (pool) => {
     })
   })
 
-  router.delete('/delete/:id', (req, res, next) => {
+  router.delete('/:id', (req, res, next) => {
     let remove = 'DELETE FROM bread WHERE id = $1';
     let id = [req.params.id]
     pool.query(remove, id, (err) => {
