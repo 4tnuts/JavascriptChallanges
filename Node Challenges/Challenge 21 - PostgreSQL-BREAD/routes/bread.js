@@ -19,9 +19,9 @@ module.exports = (pool) => {
     });
   });
 
-  router.post('/add', (req, res, next) => {
+  router.post('/', (req, res, next) => {
     let create = 'INSERT INTO bread (teks, nomor, pecahan, tanggal, kondisi) VALUES($1,$2,$3,$4,$5)';
-    let body = [req.body.string, req.body.number, req.body.float, req.body.date, req.body.boolean];
+    let body = [req.body.teks, req.body.nomor, req.body.pecahan, req.body.tanggal, req.body.kondisi];
     pool.query(create, body, (err, data) => {
       if (err) return console.error(err);
       res.status(201).json(data.rows = {
@@ -49,7 +49,7 @@ module.exports = (pool) => {
 
   router.put('/edit/:id', (req, res, next) => {
     let update = 'UPDATE bread SET teks = $2, nomor = $3, pecahan = $4, tanggal = $5, kondisi = $6  WHERE id = $1';
-    let body = [req.params.id, req.body.string, req.body.number, req.body.float, req.body.date, req.body.boolean];
+    let body = [req.params.id, req.body.teks, req.body.nomor, req.body.pecahan, req.body.tanggal, req.body.kondisi];
     console.log(body);
     pool.query(update, body, (err, data) => {
       if (err) return console.error(err);
