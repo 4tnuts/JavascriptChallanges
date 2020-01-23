@@ -3,16 +3,18 @@
     <h1>BREAD-JSON</h1>
     <div class='container'>
         <form id='form-bread'>
-            <label for="id">
-                <h4>ID</h4>
-            </label>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <div class="input-group-text">
-                        <input type="checkbox">
+            <div id='inputId'>
+                <label for="id">
+                    <h4>ID</h4>
+                </label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend-id">
+                        <div class="input-group-text">
+                            <input type="checkbox" id='idCheck' value="checked" name="idCheck">
+                        </div>
                     </div>
+                    <input type="text" class="form-control" id='id' placeholder="ID" name="id">
                 </div>
-                <input type="text" class="form-control" id='id' placeholder="ID" name="id">
             </div>
 
             <label for="string">
@@ -21,7 +23,7 @@
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                        <input type="checkbox">
+                        <input type="checkbox" id='idString' value="checked" name="stringCheck">
                     </div>
                 </div>
                 <input type="text" class="form-control" id='string' placeholder="String" name='string'>
@@ -33,7 +35,7 @@
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                        <input type="checkbox">
+                        <input type="checkbox" id='idInteger' value="checked" name="integerCheck">
                     </div>
                 </div>
                 <input type="number" class="form-control" id='integer' placeholder="Integer" name="integer">
@@ -45,7 +47,7 @@
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                        <input type="checkbox">
+                        <input type="checkbox" id='idFloat' value="checked" name="floatCheck">
                     </div>
                 </div>
                 <input type="number" class="form-control" id='float' step=any placeholder="Float" name="float">
@@ -57,11 +59,11 @@
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                        <input type="checkbox">
+                        <input type="checkbox" id='idDate' value="checked" name="dateCheck">
                     </div>
                 </div>
-                <input class="form-control" type="date" id="dateStart" name='date'>
-                <input class="form-control" type="date" id="dateEnd">
+                <input class="form-control" type="date" id="dateStart" name='dateStart'>
+                <input class="form-control" type="date" id="dateEnd" name='dateEnd'>
             </div>
 
             <label for="boolean">
@@ -70,18 +72,19 @@
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                        <input type="checkbox">
+                        <input type="checkbox" id='idBoolean' value="checked" name="booleanCheck">
                     </div>
                 </div>
                 <select class="form-control kondisi" name="boolean" id='boolean'>
-                    <option value='' disabled>Choose...</option>
+                    <option value='' disabled selected>Choose...</option>
                     <option value='true'>true</option>
                     <option value='false'>false</option>
                 </select>
             </div>
 
             <button type="submit" class="btn btn-outline-primary" id="search">Search</button>
-            <button type="submit" class="btn btn-outline-success" id="save" onclick="">Tambah</button>
+            <button type="submit" class="btn btn-outline-success" id="save">Tambah</button>
+            <button type="submit" class="btn btn-warning" id="reset">Reset</button>
         </form>
         <br>
     </div>
@@ -101,16 +104,34 @@
 
         </tbody>
     </table>
+
 </div>
 </div>
 </body>
 <script type="text/javascript">
     $(document).ready(() => {
         loadData();
-        $('#form-bread').submit((e) => {
-            e.preventDefault();
+        console.log($('#idCheck').val())
+        $('#form-bread').submit(e => {
+            event.preventDefault()
+            loadData();
+        })
+        $('#form-bread').on('click', '#save', (event) => {
+            event.preventDefault();
+            console.log('terclick');
+            $('#inputId').hide();
+            ubahForm();
+        })
+
+        $('#form-bread').on('click', '#reset', (event) => {
+            event.preventDefault();
+            backToNormal();
+        })
+
+        $('#form-bread').on('click', '#tambah', (event) => {
+            event.preventDefault();
             saveData();
-        });
+        })
 
         $('table tbody').on('click', '.btn-delete', (event) => {
             deleteData($(event.currentTarget).attr('data-id'));
@@ -118,18 +139,23 @@
 
         $('table tbody').on('click', '.btn-edit', (event) => {
             getData($(event.currentTarget).attr('data-id'));
+            ubahForm();
         })
     })
 
     const loadData = () => {
+        const data = $('#form-bread').serializeArray();
+        console.log(data)
         $.ajax({
                 method: "GET",
                 url: "http://localhost:3000/bread",
+                data: data,
                 dataType: 'json'
             })
             .done(function (hasil) {
+                console.log(hasil);
                 let html = '';
-                hasil.forEach(item => {
+                hasil.data.forEach(item => {
                     html += `
               <tr>
               <td>${item.id}</td>
@@ -147,10 +173,10 @@
             });
     }
 
+
     const saveData = () => {
         let id = $('input#id').val();
         console.log(id)
-        console.log($('input#kondisi').val())
         if (id) {
             $.ajax({
                 method: 'PUT',
@@ -160,7 +186,8 @@
                     nomor: $('input#integer').val(),
                     pecahan: $('input#float').val(),
                     tanggal: $('input#dateStart').val(),
-                    kondisi: $('.kondisi option:selected').val()
+                    kondisi: $('.kondisi option:selected').val()    ,
+                    idKeCek: $('#idCheck').val()
                 },
                 dataType: 'json'
             }).done(function (hasil) {
@@ -179,9 +206,25 @@
                 },
                 dataType: 'json'
             }).done(function (hasil) {
+                backToNormal();
                 loadData();
             })
         }
+    }
+
+    const ubahForm = () => {
+        $('.input-group-prepend-id, input#dateEnd, #search').fadeOut();
+        $('button#save').html('save').attr('id', 'tambah');
+    }
+
+    const backToNormal = () => {
+        $('.input-group-prepend-id, input#dateEnd, #search').fadeIn();
+        $('button#tambah').html('tambah').attr('id', 'save').fadeIn();
+        $('input#id').val('');
+        $('input#string').val('');
+        $('input#integer').val('');
+        $('input#float').val('');
+        $('input#dateStart').val('');
     }
 
     const getData = (id) => {
@@ -199,24 +242,17 @@
                     $('input#dateStart').val(item.tanggal);
                     $(`#boolean option[value=${item.kondisi}]`).attr('selected', 'selected');
                 })
-                $('.input-group-prepend, input#dateEnd, #search').fadeOut();
-                $('button#save').html('save');
             });
     }
     const deleteData = (id) => {
         $.ajax({
                 method: 'DELETE',
                 url: `http://localhost:3000/bread/${id}`,
-                dataType: 'json'
+                dataType: 'json',
             })
             .done(function (hasil) {
                 loadData();
-                $('input#id').val('');
-                $('input#string').val('');
-                $('input#integer').val('');
-                $('input#float').val('');
-                $('input#dateStart').val('');
-                $(`#boolean option[value=${''}]`).attr('selected', 'selected');
+                backToNormal();
             });
     }
 </script>
