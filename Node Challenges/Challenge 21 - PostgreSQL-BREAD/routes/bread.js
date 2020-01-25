@@ -8,9 +8,10 @@ router.use(bodyParser.json())
 
 module.exports = (pool) => {
   router.get('/', (req, res, next) => {
-    let resultQuery = 'SELECT count(*) FROM bread';
+    let resultQuery = 'SELECT count(*) as total FROM bread';
     const limit = 3;
-    const currentPage = req.query.page || 1;
+    const currentPage = parseInt(req.query.page) || 1;
+    console.log(req.query)
     const offset = (currentPage - 1) * limit;
     let queries = [];
     if(req.query.idCheck && req.query.id){
@@ -23,10 +24,10 @@ module.exports = (pool) => {
       queries.push(`nomor = ${req.query.integer}`);
     }
     if(req.query.floatCheck && req.query.float){
-      queries.push(`pecahan = ${req.query.float}`);
+      queries.push(`pecahan = '${req.query.float}'`);
     }
     if(req.query.dateCheck && req.query.dateStart && req.query.dateEnd){
-      queries.push(`tanggal BETWEEN ${req.query.dateStart} AND ${req.query.dateEnd}`);
+      queries.push(`tanggal BETWEEN '${req.query.dateStart}' AND '${req.query.dateEnd}'`);
     }
     if(req.query.booleanCheck && req.query.boolean){
       queries.push(`kondisi = ${req.query.boolean}`);
@@ -37,7 +38,9 @@ module.exports = (pool) => {
 
     pool.query(resultQuery, (err, data) => {
       if (err) return console.error(err);
-      const totalPage = Math.ceil(data.rows / limit);
+      console.log(data.rows[0].total)
+      const totalPage = Math.ceil(data.rows[0].total / limit);
+      console.log(totalPage);
       const url = req.url == '/' ? '?page=1' : req.url;
       resultQuery = `SELECT * FROM bread`;
       if(queries.length > 0){
@@ -45,19 +48,21 @@ module.exports = (pool) => {
       }
       resultQuery+=` LIMIT ${limit} OFFSET ${offset}`;
       pool.query(resultQuery, (err, data)=>{
+        console.log(resultQuery);
+        console.log(req.query);
+        console.log(data.rows);
+          let finalData = data.rows.map(item => {
+            item.tanggal = moment(item.tanggal).format('YYYY-MMM-DD');
+            return item;
+          })
         res.status(200).json({
-          data: data.rows,
+          finalData,
           url,
           totalPage,
-          currentPage : parseInt(currentPage),
-          query : req.query
+          currentPage,
         });
       })
     });
-    // let finalData = data.rows.map(item => {
-    //   item.tanggal = moment(item.tanggal).format('YYYY-MMM-DD');
-    //   return item;
-    // })
   });
 
   router.post('/', (req, res, next) => {

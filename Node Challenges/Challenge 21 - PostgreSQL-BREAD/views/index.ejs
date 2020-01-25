@@ -3,17 +3,18 @@
     <h1>BREAD-JSON</h1>
     <div class='container'>
         <form id='form-bread'>
+            <input type="hidden" name='page' id='page' value='1'>
             <div id='inputId'>
                 <label for="id">
                     <h4>ID</h4>
                 </label>
                 <div class="input-group mb-3">
-                    <div class="input-group-prepend-id">
+                    <div class="input-group-prepend">
                         <div class="input-group-text">
                             <input type="checkbox" id='idCheck' value="checked" name="idCheck">
                         </div>
                     </div>
-                    <input type="text" class="form-control" id='id' placeholder="ID" name="id">
+                    <input type="text" class="form-control" id='idInput' placeholder="ID" name="id">
                 </div>
             </div>
 
@@ -104,7 +105,11 @@
 
         </tbody>
     </table>
+    <nav aria-label="...">
+        <ul class="pagination">
 
+        </ul>
+    </nav>
 </div>
 </div>
 </body>
@@ -119,7 +124,6 @@
         $('#form-bread').on('click', '#save', (event) => {
             event.preventDefault();
             console.log('terclick');
-            $('#inputId').hide();
             ubahForm();
         })
 
@@ -141,11 +145,32 @@
             getData($(event.currentTarget).attr('data-id'));
             ubahForm();
         })
+
+        $('ul.pagination').on('click', '.previous', (event) => {
+            let page = $('input#page').val()
+            $('input#page').val(parseInt(page) - 1)
+            console.log($('input#page').val())
+            loadData();
+        });
+
+        $('ul.pagination').on('click', '.pageNow', (event) => {
+            let page = $('input#page').val()
+            $('input#page').val($(event.currentTarget).attr('data-page'));
+            loadData();
+        });
+
+
+        $('ul.pagination').on('click', '.next', (event) => {
+            let page = $('input#page').val()
+            $('input#page').val(parseInt(page) + 1)
+            console.log($('input#page').val())
+            loadData();
+        });
     })
 
     const loadData = () => {
         const data = $('#form-bread').serializeArray();
-        console.log(data)
+        console.log(decodeURIComponent($.param(data)))
         $.ajax({
                 method: "GET",
                 url: "http://localhost:3000/bread",
@@ -155,7 +180,7 @@
             .done(function (hasil) {
                 console.log(hasil);
                 let html = '';
-                hasil.data.forEach(item => {
+                hasil.finalData.forEach(item => {
                     html += `
               <tr>
               <td>${item.id}</td>
@@ -168,8 +193,31 @@
                   <button type="button" class="btn btn-outline-success btn-edit" data-id="${item.id}">edit</button></td>
               </tr>
               `
+
+                    console.log(hasil);
                 });
                 $('table tbody').html(html);
+
+                let pagination = `
+                <li class="page-item ${hasil.currentPage <= 1 ? 'disabled' : ''}">
+                    <button class="page-link previous" tabindex="-1" aria-disabled="true">Previous</button>
+                </li> 
+                `;
+
+
+                for (let i = 1; i <= hasil.totalPage; i++) {
+                    pagination += `
+                    <li class="page-item ${hasil.currentPage == i ? 'active': ''}"><button class="page-link pageNow" data-page='${i}'>${i}</button></li>
+                    `
+                }
+                pagination += `<li class="page-item ${hasil.currentPage >= hasil.totalPage ? 'disabled' : ''}">
+                                <button class="page-link next">Next</button>
+                            </li>
+                            `
+
+                $('.pagination').html(pagination);
+
+
             });
     }
 
@@ -186,7 +234,7 @@
                     nomor: $('input#integer').val(),
                     pecahan: $('input#float').val(),
                     tanggal: $('input#dateStart').val(),
-                    kondisi: $('.kondisi option:selected').val()    ,
+                    kondisi: $('.kondisi option:selected').val(),
                     idKeCek: $('#idCheck').val()
                 },
                 dataType: 'json'
@@ -213,18 +261,19 @@
     }
 
     const ubahForm = () => {
-        $('.input-group-prepend-id, input#dateEnd, #search').fadeOut();
+        $('.input-group-prepend, #inputId, input#dateEnd, #search').fadeOut();
         $('button#save').html('save').attr('id', 'tambah');
     }
 
     const backToNormal = () => {
-        $('.input-group-prepend-id, input#dateEnd, #search').fadeIn();
+        $('.input-group-prepend, #inputId, input#dateEnd, #search').fadeIn();
         $('button#tambah').html('tambah').attr('id', 'save').fadeIn();
         $('input#id').val('');
         $('input#string').val('');
         $('input#integer').val('');
         $('input#float').val('');
         $('input#dateStart').val('');
+        $('input#dateEnd').val('');
     }
 
     const getData = (id) => {
