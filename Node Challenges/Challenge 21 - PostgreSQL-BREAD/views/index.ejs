@@ -123,7 +123,7 @@
         })
         $('#form-bread').on('click', '#save', (event) => {
             event.preventDefault();
-            console.log('terclick');
+            
             ubahForm();
         })
 
@@ -134,7 +134,7 @@
 
         $('#form-bread').on('click', '#tambah', (event) => {
             event.preventDefault();
-            saveData();
+            saveData($('.btn-edit').attr('data-id'));
         })
 
         $('table tbody').on('click', '.btn-delete', (event) => {
@@ -216,15 +216,13 @@
                             `
 
                 $('.pagination').html(pagination);
-
+                            
 
             });
     }
 
 
-    const saveData = () => {
-        let id = $('input#id').val();
-        console.log(id)
+    const saveData = (id) => {
         if (id) {
             $.ajax({
                 method: 'PUT',
@@ -234,8 +232,7 @@
                     nomor: $('input#integer').val(),
                     pecahan: $('input#float').val(),
                     tanggal: $('input#dateStart').val(),
-                    kondisi: $('.kondisi option:selected').val(),
-                    idKeCek: $('#idCheck').val()
+                    kondisi: $('.kondisi option:selected').val()
                 },
                 dataType: 'json'
             }).done(function (hasil) {
