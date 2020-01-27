@@ -11,7 +11,6 @@ module.exports = (pool) => {
     let resultQuery = 'SELECT count(*) as total FROM bread';
     const limit = 3;
     const currentPage = parseInt(req.query.page) || 1;
-    console.log(req.query)
     const offset = (currentPage - 1) * limit;
     let queries = [];
     if(req.query.idCheck && req.query.id){
@@ -38,9 +37,7 @@ module.exports = (pool) => {
 
     pool.query(resultQuery, (err, data) => {
       if (err) return console.error(err);
-      console.log(data.rows[0].total)
       const totalPage = Math.ceil(data.rows[0].total / limit);
-      console.log(totalPage);
       const url = req.url == '/' ? '?page=1' : req.url;
       resultQuery = `SELECT * FROM bread`;
       if(queries.length > 0){
@@ -48,9 +45,6 @@ module.exports = (pool) => {
       }
       resultQuery+=` LIMIT ${limit} OFFSET ${offset}`;
       pool.query(resultQuery, (err, data)=>{
-        console.log(resultQuery);
-        console.log(req.query);
-        console.log(data.rows);
           let finalData = data.rows.map(item => {
             item.tanggal = moment(item.tanggal).format('YYYY-MMM-DD');
             return item;
@@ -67,7 +61,6 @@ module.exports = (pool) => {
 
   router.post('/', (req, res, next) => {
     let create = 'INSERT INTO bread (teks, nomor, pecahan, tanggal, kondisi) VALUES($1,$2,$3,$4,$5)';
-    console.log(req.body);
     let body = [req.body.teks, req.body.nomor, req.body.pecahan, req.body.tanggal, req.body.kondisi];
     pool.query(create, body, (err, data) => {
       if (err) return console.error(err);
@@ -97,7 +90,6 @@ module.exports = (pool) => {
   router.put('/:id', (req, res, next) => {
     let update = 'UPDATE bread SET teks = $2, nomor = $3, pecahan = $4, tanggal = $5, kondisi = $6  WHERE id = $1';
     let body = [req.params.id, req.body.teks, req.body.nomor, req.body.pecahan, req.body.tanggal, req.body.kondisi];
-    console.log(body);
     pool.query(update, body, (err, data) => {
       if (err) return console.error(err);
       res.status(201).json(data.rows = {

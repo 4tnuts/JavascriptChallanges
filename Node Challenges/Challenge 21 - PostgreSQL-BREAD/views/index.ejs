@@ -14,7 +14,7 @@
                             <input type="checkbox" id='idCheck' value="checked" name="idCheck">
                         </div>
                     </div>
-                    <input type="text" class="form-control" id='idInput' placeholder="ID" name="id">
+                    <input type="text" class="form-control" id='id' placeholder="ID" name="id">
                 </div>
             </div>
 
@@ -77,15 +77,14 @@
                     </div>
                 </div>
                 <select class="form-control kondisi" name="boolean" id='boolean'>
-                    <option value='' disabled selected>Choose...</option>
-                    <option value='true'>true</option>
                     <option value='false'>false</option>
+                    <option value='true'>true</option>
                 </select>
             </div>
 
             <button type="submit" class="btn btn-outline-primary" id="search">Search</button>
             <button type="submit" class="btn btn-outline-success" id="save">Tambah</button>
-            <button type="submit" class="btn btn-warning" id="reset">Reset</button>
+            <button type="reset" class="btn btn-warning" id="reset">Reset</button>
         </form>
         <br>
     </div>
@@ -116,25 +115,24 @@
 <script type="text/javascript">
     $(document).ready(() => {
         loadData();
-        console.log($('#idCheck').val())
+
         $('#form-bread').submit(e => {
             event.preventDefault()
             loadData();
         })
         $('#form-bread').on('click', '#save', (event) => {
-            event.preventDefault();
-            
+            event.preventDefault()
             ubahForm();
         })
-
+        
         $('#form-bread').on('click', '#reset', (event) => {
-            event.preventDefault();
             backToNormal();
+            loadData();
         })
 
         $('#form-bread').on('click', '#tambah', (event) => {
             event.preventDefault();
-            saveData($('.btn-edit').attr('data-id'));
+            saveData($('input#id').val());
         })
 
         $('table tbody').on('click', '.btn-delete', (event) => {
@@ -149,7 +147,6 @@
         $('ul.pagination').on('click', '.previous', (event) => {
             let page = $('input#page').val()
             $('input#page').val(parseInt(page) - 1)
-            console.log($('input#page').val())
             loadData();
         });
 
@@ -163,14 +160,12 @@
         $('ul.pagination').on('click', '.next', (event) => {
             let page = $('input#page').val()
             $('input#page').val(parseInt(page) + 1)
-            console.log($('input#page').val())
             loadData();
         });
     })
 
     const loadData = () => {
         const data = $('#form-bread').serializeArray();
-        console.log(decodeURIComponent($.param(data)))
         $.ajax({
                 method: "GET",
                 url: "http://localhost:3000/bread",
@@ -178,7 +173,11 @@
                 dataType: 'json'
             })
             .done(function (hasil) {
-                console.log(hasil);
+                let pageNow = $('#page').val();
+                if(hasil.finalData.length == 0 && pageNow != '1'){
+                    $('#page').val(pageNow - 1);
+                    loadData();
+                }else{
                 let html = '';
                 hasil.finalData.forEach(item => {
                     html += `
@@ -193,8 +192,6 @@
                   <button type="button" class="btn btn-outline-success btn-edit" data-id="${item.id}">edit</button></td>
               </tr>
               `
-
-                    console.log(hasil);
                 });
                 $('table tbody').html(html);
 
@@ -217,7 +214,7 @@
 
                 $('.pagination').html(pagination);
                             
-
+                        }
             });
     }
 
@@ -237,6 +234,7 @@
                 dataType: 'json'
             }).done(function (hasil) {
                 loadData();
+                backToNormal();
             })
         } else {
             $.ajax({
@@ -258,19 +256,16 @@
     }
 
     const ubahForm = () => {
-        $('.input-group-prepend, #inputId, input#dateEnd, #search').fadeOut();
+        $('.input-group-prepend, input#dateEnd, #search').fadeOut();
+        $('#inputId').attr('hidden', true);
         $('button#save').html('save').attr('id', 'tambah');
     }
 
     const backToNormal = () => {
-        $('.input-group-prepend, #inputId, input#dateEnd, #search').fadeIn();
+        $('.input-group-prepend, input#dateEnd, #search').fadeIn();
+        $('#inputId').attr('hidden', false);
         $('button#tambah').html('tambah').attr('id', 'save').fadeIn();
-        $('input#id').val('');
-        $('input#string').val('');
-        $('input#integer').val('');
-        $('input#float').val('');
-        $('input#dateStart').val('');
-        $('input#dateEnd').val('');
+        $(`#boolean option`).removeAttr('selected').filter(`[value='']`).attr('selected', true);
     }
 
     const getData = (id) => {
@@ -286,7 +281,7 @@
                     $('input#integer').val(item.nomor);
                     $('input#float').val(item.pecahan);
                     $('input#dateStart').val(item.tanggal);
-                    $(`#boolean option[value=${item.kondisi}]`).attr('selected', 'selected');
+                    $(`#boolean option`).removeAttr('selected').filter(`[value=${item.kondisi}]`).attr('selected', 'selected');
                 })
             });
     }
