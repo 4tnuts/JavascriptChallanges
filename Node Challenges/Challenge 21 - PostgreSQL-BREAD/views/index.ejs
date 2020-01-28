@@ -281,7 +281,7 @@
                     $('input#integer').val(item.nomor);
                     $('input#float').val(item.pecahan);
                     $('input#dateStart').val(item.tanggal);
-                    $(`#boolean option`).removeAttr('selected').filter(`[value=${item.kondisi}]`).attr('selected', 'selected');
+                    $(`#boolean option`).removeAttr('selected').filter(`[value="${item.kondisi}"]`).prop('selected', true);
                 })
             });
     }
