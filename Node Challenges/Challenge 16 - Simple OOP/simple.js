@@ -1,83 +1,68 @@
-class carFactory{
+class Tyre{
+    constructor(tyreBrand, tyreSize, tyrePrice){
+        this.tyreBrand = tyreBrand;
+        this.tyreSize  = tyreSize;
+        this.tyrePrice = tyrePrice;  
+    }
+}
+
+class Car{
+    constructor(seat, tyre, door, window){
+        this.seat = seat;
+        this.tyre = tyre;
+        this.door = door;
+        this.window = window;
+        this.engine = Car.getEngine(); 
+    }
+
+    static getEngine(){
+        let engineName = ['Phoenix', 'Kuro', 'Aka'];
+        let engineNumber = Math.floor(Math.random() * (2 - 0) + 0);
+        let tyre =  engineName[engineNumber];
+        return tyre;
+    }
+}
+
+class Honda extends Car {
     constructor(){
-        this.carNumbers = Math.floor((Math.random() * 6) + 1);
-    }
-    buildCar(){
-        let carResult = [];
-        let queue = 0;
-        let createVolksWagen = new VolksWagen();
-        let createChevrolet = new Chevrolet();
-        for(let i = 0; i < this.carNumbers ; i++){
-            if(queue === 0){
-                carResult.push(createChevrolet.buildChevrolet());
-                queue++;
-            }else{
-                carResult.push(createVolksWagen.buildVW());
-            }
-        }
-        console.log(`${this.carNumbers} Cars Permonth`);
-        console.log(carResult);
+        super(4, new Tyre('Roda Cap Tiga Kaki', '75 mm', 1000000), 4, 6);
     }
 }
 
-class car{
+class Yamaha extends Car {
     constructor(){
-        this.tire = new tyre();
-        this.kursi = Math.floor((Math.random() * 4) + 2);
-        this.pintu = Math.floor((Math.random() * 4) + 2);
-    }
-   warranty(){
-       const year = `${Math.floor((Math.random() * 6) + 1)} years warranty`;
-       return year;
-   }
-}
-
-class tyre{
-    constructor(){
-        const tireSizes = ['Big', 'Medium', 'Small'];
-        const tireBrands = ['Neptun', 'Zeus','Athena'];
-        this.size = tireSizes[Math.floor(Math.random() * 3)];
-        this.brand = tireBrands[Math.floor(Math.random() * 3)];
+        super( 6, new Tyre('Roda Cinta', '13 mm', 1300000), 6, 6);
     }
 }
 
-class VolksWagen extends car{
-    buildVW(){
-        let nameCar = ['Combi','Golf','Beetle'];
-        let carResult = {
-            name : nameCar[Math.floor(Math.random() * 3)],
-            brand : 'VolksWagen',
-            tire   : {
-                brand : this.tire.brand,
-                size :this.tire.size
-            },
-            kursi : this.kursi,
-            pintu : this.pintu,
-            warranty : this.warranty()
+class CarFactory {
+    constructor (){
+        this.cars = []
+    }
+
+    static perMonthCars(){
+        return Math.floor(Math.random() * (5 - 1) + 1);
+    }
+
+    produceCar(){
+        // Honda Cars
+        for(let i = 0; i < CarFactory.perMonthCars(); i++){
+            this.cars.push(new Honda());
         }
-        return carResult;
-    }
-}
 
-
-class Chevrolet extends car{
-    buildChevrolet(){
-        let nameCar = ['Camaro','Cruze','Impala'];
-        let carResult = {
-            name : nameCar[Math.floor(Math.random() * 3)],
-            brand : 'Chevrolet',
-            tire   : {
-                brand : this.tire.brand,
-                size :this.tire.size
-            },
-            kursi : this.kursi,
-            pintu : this.pintu,
-            warranty : this.warranty()
+        //Yamaha Cars
+        for(let i = 0; i < CarFactory.perMonthCars(); i++){
+            this.cars.push(new Yamaha());
         }
-        return carResult;
+    }
+
+    produceResult(){
+       this.cars.forEach((car, index) => {
+           console.log(`Car Factory result : ${car.tyre.tyreBrand}, ${car.engine}`)
+       }) 
     }
 }
 
-let cars = new carFactory();
-cars.buildCar();
-
+let carFactory = new CarFactory();
+carFactory.produceCar();
+carFactory.produceResult();
